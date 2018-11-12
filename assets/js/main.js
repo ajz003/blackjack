@@ -84,7 +84,7 @@ function initDeck() {
     }
     yourCards.forEach(element => {
         $("#card-section").prepend(`
-        <img class="img-fluid card float-left" src="${element.src}">
+        <img class="card float-left" src="${element.src}">
         `)
     });
     $("#count").html(count)
@@ -123,7 +123,7 @@ $("#new-hand").on("click", function drawCards() {
         }
         yourCards.forEach(element => {
             $("#card-section").prepend(`
-        <img class="img-fluid card float-left" src="${element.src}">
+        <img class="card float-left" src="${element.src}">
         `)
         });
 
@@ -149,7 +149,7 @@ $("#new-hand").on("click", function drawCards() {
         }
         yourCards.forEach(element => {
             $("#card-section").prepend(`
-        <img class="img-fluid card float-left" src="${element.src}">
+        <img class="card float-left" src="${element.src}">
         `)
         });
         console.log(deck[0], deck[1])
