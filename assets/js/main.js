@@ -92,9 +92,49 @@ function initDeck() {
 }
 initDeck();
 $("#new-hand").on("click", function drawCards() {
+
     $("#card-section").empty();
     yourCards = [];
     console.log(deck.length)
+
+    if (deck.length === 0) {
+
+        alert("Deck shuffled.")
+        deck = [];
+        initDeck();
+
+        $("#count").html(count)
+        $("#cards-left").html(deck.length)
+
+        return;
+
+    }
+    if (deck.length === 2) {
+
+        for (let i = 0; i < 2; i++) {
+            console.log(deck[i].value)
+            if (deck[i].value === "2" || deck[i].value === "3" || deck[i].value === "4" || deck[i].value === "5" || deck[i].value === "6") {
+                count++;
+            }
+            if (deck[i].value === "10" || deck[i].value === "Jack" || deck[i].value === "Queen" || deck[i].value === "King" || deck[i].value === "Ace") {
+                count--;
+            }
+            yourCards.push(deck[i]);
+        }
+        yourCards.forEach(element => {
+            $("#card-section").prepend(`
+        <img class="img-fluid card float-left" src="${element.src}">
+        `)
+        });
+
+        deck = [];
+
+        $("#count").html(count)
+        $("#cards-left").html(deck.length)
+
+        return;
+
+    }
     if (deck.length > 2) {
         for (let i = 0; i < 2; i++) {
             console.log(deck[i].value)
@@ -113,11 +153,11 @@ $("#new-hand").on("click", function drawCards() {
         `)
         });
         console.log(deck[0], deck[1])
-    } else if (deck.length === 2) {
-        alert("Deck shuffled.")
-        deck = [];
-        initDeck();
+
+        $("#count").html(count)
+        $("#cards-left").html(deck.length)
+
+        return;
     }
-    $("#count").html(count)
-    $("#cards-left").html(deck.length)
+
 })
