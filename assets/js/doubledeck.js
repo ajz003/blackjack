@@ -9,66 +9,54 @@ var players = [];
 var playerCount = 0;
 var trueCount = 0;
 
-function Card(value, suit, src) {
+function Card(value, suit, src, trueValue) {
     this.value = value;
     this.suit = suit;
     this.src = src;
+    this.trueValue = trueValue;
 }
 
 
 function makeDeck(num) {
     for (let j = 0; j < num; j++) {
 
-
-
         for (let i = 0; i < 9; i++) {
-            let card = new Card(`${i + 2}`, "Clubs", `assets/images/${i + 2}C.png`)
+            let card = new Card(`${i + 2}`, "Clubs", `assets/images/${i + 2}C.png`, `${i + 2}`)
             deck.push(card)
         }
         for (let i = 0; i < 9; i++) {
-            let card = new Card(`${i + 2}`, "Diamonds", `assets/images/${i + 2}D.png`)
+            let card = new Card(`${i + 2}`, "Diamonds", `assets/images/${i + 2}D.png`, `${i + 2}`)
             deck.push(card)
         }
         for (let i = 0; i < 9; i++) {
-            let card = new Card(`${i + 2}`, "Hearts", `assets/images/${i + 2}H.png`)
+            let card = new Card(`${i + 2}`, "Hearts", `assets/images/${i + 2}H.png`, `${i + 2}`)
             deck.push(card)
         }
         for (let i = 0; i < 9; i++) {
-            let card = new Card(`${i + 2}`, "Spades", `assets/images/${i + 2}S.png`)
+            let card = new Card(`${i + 2}`, "Spades", `assets/images/${i + 2}S.png`, `${i + 2}`)
             deck.push(card)
         }
         for (let i = 0; i < 4; i++) {
-            let card = new Card("Jack", `${suits[i]}`, `assets/images/J${suitsL[i]}.png`)
+            let card = new Card("Jack", `${suits[i]}`, `assets/images/J${suitsL[i]}.png`, 10)
             deck.push(card)
         }
         for (let i = 0; i < 4; i++) {
-            let card = new Card("Queen", `${suits[i]}`, `assets/images/Q${suitsL[i]}.png`)
+            let card = new Card("Queen", `${suits[i]}`, `assets/images/Q${suitsL[i]}.png`, 10)
             deck.push(card)
         }
         for (let i = 0; i < 4; i++) {
-            let card = new Card("King", `${suits[i]}`, `assets/images/K${suitsL[i]}.png`)
+            let card = new Card("King", `${suits[i]}`, `assets/images/K${suitsL[i]}.png`, 10)
             deck.push(card)
         }
         for (let i = 0; i < 4; i++) {
-            let card = new Card("Ace", `${suits[i]}`, `assets/images/ace${suitsL[i]}.png`)
+            let card = new Card("Ace", `${suits[i]}`, `assets/images/ace${suitsL[i]}.png`, 11)
             deck.push(card)
         }
 
     }
     console.log(deck)
 }
-// function getDeck() {
-//     for (let i = 0; i < suits.length; i++) {
-//         for (let j = 0; j < values.length; j++) {
-//             let card = {
-//                 value: values[j],
-//                 suit: suits[i]
-//             }
-//             deck.push(card);
-//         }
-//     }
-//     return deck;
-// }
+
 function shuffleDeck(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
@@ -101,6 +89,47 @@ function countAndDeal(playerHand) {
     deck.splice(0, 1);
     console.log(playerHand)
 
+    $("#count").html(trueCount)
+    $("#your-count").html(playerCount)
+    $("#cards-left").html(deck.length)
+
+
+}
+
+function handValue(playerHand) {
+
+    let total = 0;
+    let numAces = 0;
+    let hasAces = false;
+
+    for (let i = 0; i < playerHand.length; i++) {
+
+
+
+        let val = parseInt(playerHand[i].trueValue);
+        total += val;
+
+        if (playerHand[i].value === "Ace") {
+            numAces++;
+            hasAces = true;
+
+        }
+        
+
+    }
+
+    if (hasAces === true && total > 21) {
+        for (let i = 0; i < numAces; i++) {
+            total -= 10;
+        }
+
+    }
+
+    console.log(numAces, "numAces")
+
+    console.log(total)
+
+    return total;
 
 }
 
@@ -139,6 +168,10 @@ function initDeck() {
     $("#count").html(trueCount)
     $("#your-count").html(playerCount)
     $("#cards-left").html(deck.length)
+
+    handValue(dealerCards);
+    handValue(yourCards);
+
 }
 
 // APPLICATION
@@ -148,6 +181,51 @@ initDeck();
 
 
 // jQuery
+
+$("#hit").on("click", function hit() {
+    countAndDeal(yourCards);
+    $("#card-section").append(`
+    <div class="col">
+    <img class="img-fluid card float-left" src="${yourCards[yourCards.length - 1].src}">
+    </div>
+    `)
+    if (handValue(yourCards) > 21) {
+        alert("You bust.")
+    }
+})
+
+
+$("#stand").on("click", function () {
+
+    $("#dealer-card-section").empty();
+
+    dealerCards.forEach(element => {
+        $("#dealer-card-section").prepend(`
+        <div class="col">
+    <img class="img-fluid card float-left" src="${element.src}">
+    </div>
+    `)
+    });
+
+    while (handValue(dealerCards) < 17) {
+
+        countAndDeal(dealerCards);
+        $("#dealer-card-section").append(`
+        <div class="col">
+        <img class="img-fluid card float-left" src="${dealerCards[dealerCards.length - 1].src}">
+        </div>
+        `)
+
+    }
+
+})
+
+
+
+
+
+
+
 
 
 $("#new-hand").on("click", function drawCards() {
