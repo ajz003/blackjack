@@ -17,20 +17,27 @@
 <body>
 
     <div class="container">
+            <div class="row" id="dealer-card-section">
+
+            </div>
         <div class="row" id="card-section">
 
         </div>
         <div class="row">
             <div class="col">
-                    <button type="button" class="btn btn-primary" id="new-hand">New Hand</button>
+                    <button type="button" class="btn btn-danger" id="hit">Hit</button>
+                    <button type="button" class="btn btn-warning" id="stand">Stand</button>
+                    <button type="button" class="btn btn-primary" id="double">Double</button>
+                    <button type="button" class="btn btn-secondary" id="new-hand">New Hand</button>
             </div>
             <div class="col">
                 <p>Current count: <span id="count"></span></p>
+                <p>Your count: <span id="your-count"></span></p>
                 <p>Cards left in deck: <span id="cards-left"></span></p>
             </div>
         </div>
     </div>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/doubledeck.js"></script>
 </body>
 </html>
