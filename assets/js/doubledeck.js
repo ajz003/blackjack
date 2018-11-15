@@ -481,6 +481,7 @@ function newRound() {
         $(".btn").addClass("disabled")
         $("#insurance").removeClass("disabled");
         $("#no-insurance").removeClass("disabled");
+        $("#suggestion").removeClass("disabled");
     }
 
 }
@@ -521,12 +522,6 @@ initDeck();
 // ------------------------- jQuery
 
 $("#split-card-section").hide();
-
-$(".btn").on("click", function () {
-    if (activeHand.length > 2) {
-        $("#double").addClass("disabled");
-    }
-})
 
 var splitArr1 = [];
 var splitArr2 = [];
@@ -779,6 +774,11 @@ $("#no-insurance").on("click", function split() {
 
 })
 
+$("#suggestion").on("click", function () {
+
+    suggestion();
+})
+
 $("#new-hand").on("click", function () {
 
     if ($(this).hasClass('disabled')) {
@@ -788,5 +788,11 @@ $("#new-hand").on("click", function () {
 
     newRound();
 
+})
+
+$(".btn").on("click", function () {
+    if (activeHand.length > 2) {
+        $("#double").addClass("disabled");
+    }
 })
 
