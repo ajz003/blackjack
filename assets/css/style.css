@@ -9,7 +9,8 @@
 }
 
 .btn.disabled, .btn:disabled {
-    opacity: .25;
+    /* opacity: .25; */
+    display: none;
 }
 
 #split-card-section {
@@ -22,6 +23,10 @@ body {
 
 p, h1 {
     color: lemonchiffon;
+}
+
+h1 {
+    margin: 0px;
 }
 
 .active {

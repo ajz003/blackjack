@@ -98,7 +98,12 @@ function shuffleDeck(deck) {
 // ------------------------------------ CHANGE THIS AFTER TESTING
 function deal(playerHand) {
     playerHand.push(deck[0]);
-    // playerHand.push(new Card("8", "Clubs", `assets/images/8C.png`, "8"));
+    // let rand = Math.random()
+    // if (rand > 0.5) {
+    //     playerHand.push(new Card("8", "Clubs", `assets/images/8C.png`, "8"));
+    // } else {
+    //     playerHand.push(new Card("8", "Spades", `assets/images/8S.png`, "8"));
+    // }
     deck.splice(0, 1);
     $("#cards-left").html(`${deck.length}/104`)
 }
@@ -201,9 +206,7 @@ function handValue(playerHand) {
 
 function appendYours() {
     $("#card-section").append(`
-    <div class="col">
     <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
-    </div>
     `)
 }
 
@@ -215,6 +218,9 @@ function switchActive() {
     if (splitNumber === 0) {
         activeHand = yourCards;
         $("#card-section").addClass("active");
+    }
+    if (handValue(activeHand).total === 21) {
+        switchActive();
     }
 
 }
@@ -287,13 +293,13 @@ function evalRound() {
             }
 
             if (dealerTotal > yourTotal) {
-                alert(`Dealer wins with a ${dealerTotal} over your ${yourTotal}.`);
+                alert(`Dealer wins with a ${dealerTotal} over your ${yourTotal}. (Split)`);
             }
             if (dealerTotal < yourTotal) {
-                alert(`You win with a ${yourTotal} over the dealer's ${dealerTotal}.`);
+                alert(`You win with a ${yourTotal} over the dealer's ${dealerTotal}. (Split)`);
             }
             if (dealerTotal === yourTotal) {
-                alert("Push.");
+                alert("Push. (Split)");
             }
         }
 
@@ -479,6 +485,35 @@ function newRound() {
 
 }
 
+// ----------------------------- Keypresses
+
+$(document).keypress(function (e) {
+    alert(e.which)
+
+    switch (e.which) {
+        case 32:
+            alert("Hit.");
+            break;
+        case 97:
+            alert("Stand.");
+            break;
+        case 100:
+            alert("Double.");
+            break;
+        case 115:
+            alert("Split.");
+            break;
+        case 114:
+            alert("Insurance.");
+            break;
+        case 99:
+            alert("No Insurance.");
+            break;
+    }
+
+
+})
+
 // ----------------------- APPLICATION
 
 initDeck();
@@ -487,12 +522,11 @@ initDeck();
 
 $("#split-card-section").hide();
 
-// $(".btn").on("click", function () {
-//     console.log(this, "this")
-//     if ($(this).hasClass("disabled")) {
-//         return false;
-//     }
-// })
+$(".btn").on("click", function () {
+    if (activeHand.length > 2) {
+        $("#double").addClass("disabled");
+    }
+})
 
 var splitArr1 = [];
 var splitArr2 = [];
@@ -534,21 +568,33 @@ $("#split").on("click", function split() {
 
         $(`#split-card-section-${splitNumber - 1}`).removeClass("active");
 
+        $(`#split-card-section-${splitNumber - 1}`).empty();
+
+        deal(splits[splitNumber - 2]);
+        deal(activeHand);
+
+        splits[splitNumber - 1].forEach(element => {
+            $(`#split-card-section-${splitNumber - 1}`).append(`
+            <img class="img card float-left" src="${element.src}">
+            `)
+        });
+
     } else {
         activeHand.push(yourCards[1]);
         yourCards.splice(1, 1);
-    }
 
+        $("#card-section").empty();
 
-    $("#card-section").empty();
+        deal(yourCards);
+        deal(activeHand);
 
-    deal(yourCards);
-
-    yourCards.forEach(element => {
-        $("#card-section").append(`
+        yourCards.forEach(element => {
+            $("#card-section").append(`
         <img class="img card float-left" src="${element.src}">
         `)
-    });
+        });
+
+    }
 
     activeHand.forEach(element => {
         $(`#split-card-section-${splitNumber}`).append(`
@@ -556,19 +602,18 @@ $("#split").on("click", function split() {
         `)
     });
 
-    deal(activeHand);
-
-    $(`#split-card-section-${splitNumber}`).append(`
-    <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
-    `)
-
     if (handValue(activeHand).total === 21) {
         switchActive();
+    }
+
+    if (activeHand[0].trueValue !== activeHand[1].trueValue) {
+        $("#split").addClass("disabled");
     }
 
 })
 
 $("#hit").on("click", function hit() {
+
     deal(activeHand);
     initCount();
 
@@ -592,11 +637,13 @@ $("#hit").on("click", function hit() {
 
             evalRound();
         }
-    } if (handValue(activeHand).total > 21) {
-        dealerPlay();
-        evalRound();
-    }
-    else {
+
+        if (handValue(activeHand).total === 21) {
+            dealerPlay();
+            evalRound();
+        }
+
+    } else {
         $(`#split-card-section-${splitNumber}`).append(`
         <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
         `)
@@ -626,28 +673,34 @@ $("#stand").on("click", function () {
 
 $("#double").on("click", function () {
 
-    deal(activeHand);
+    if (activeHand.length < 3) {
+        deal(activeHand);
 
-    if (activeHand === yourCards) {
+        if (activeHand === yourCards) {
 
-        appendYours();
+            if (handValue(activeHand).total > 21) {
+                alert("You bust.");
+            }
 
-        dealerPlay();
-        evalRound();
+            appendYours();
+            dealerPlay();
+            evalRound();
 
-    } else {
+        } else {
 
-        $(`#split-card-section-${splitNumber}`).append(`
+            $(`#split-card-section-${splitNumber}`).append(`
         <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
         `)
 
-        if (handValue(activeHand).total > 21) {
-            alert("You bust.");
+            if (handValue(activeHand).total > 21) {
+                alert("You bust.");
 
+
+            }
             switchActive();
-
         }
     }
+
 
 })
 
@@ -670,15 +723,15 @@ $("#insurance").on("click", function split() {
         if (!$("#split").hasClass("disabled")) {
             $("#split").addClass("disabled");
         }
-    
+
         if (!$("#insurance").hasClass("disabled")) {
             $("#insurance").addClass("disabled");
         }
-    
+
         if (!$("#no-insurance").hasClass("disabled")) {
             $("#no-insurance").addClass("disabled");
         }
-    
+
         if (!$("#new-hand").hasClass("disabled")) {
             $("#new-hand").addClass("disabled");
         }
@@ -706,15 +759,15 @@ $("#no-insurance").on("click", function split() {
         if (!$("#split").hasClass("disabled")) {
             $("#split").addClass("disabled");
         }
-    
+
         if (!$("#insurance").hasClass("disabled")) {
             $("#insurance").addClass("disabled");
         }
-    
+
         if (!$("#no-insurance").hasClass("disabled")) {
             $("#no-insurance").addClass("disabled");
         }
-    
+
         if (!$("#new-hand").hasClass("disabled")) {
             $("#new-hand").addClass("disabled");
         }
