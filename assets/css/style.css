@@ -8,6 +8,11 @@
     margin-bottom: 10px;
 }
 
+.btn {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 .btn.disabled, .btn:disabled {
     /* opacity: .25; */
     display: none;

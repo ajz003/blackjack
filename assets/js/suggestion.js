@@ -115,7 +115,7 @@ function suggestion() {
         }
 
 
-        if (total > 19) {
+        if (total >= 19) {
             alert("Stand.")
         }
 
