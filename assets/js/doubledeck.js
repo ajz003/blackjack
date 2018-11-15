@@ -442,8 +442,16 @@ function newRound() {
 
     $("#cards-left").html(`${deck.length}/104`)
 
+
+
     if (handValue(yourCards).total === 21 && dealerCards[1].value !== "Ace") {
         alert("You got 21.")
+
+        if (handValue(dealerCards).total === 21) {
+            dealerPlay();
+            evalRound();
+            return;
+        }
 
         $("#dealer-card-section").empty();
 
@@ -553,6 +561,10 @@ $("#split").on("click", function split() {
     $(`#split-card-section-${splitNumber}`).append(`
     <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
     `)
+
+    if (handValue(activeHand).total === 21) {
+        switchActive();
+    }
 
 })
 
