@@ -16,7 +16,7 @@ function suggestion() {
 
 
     if (dealer === 11 && !$("#insurance").hasClass("disabled")) {
-        alert("No insurance.")
+        return alert("No insurance.");
     }
 
     if (canSplit === true) {
