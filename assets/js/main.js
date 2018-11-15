@@ -84,9 +84,9 @@ function initDeck() {
     }
     yourCards.forEach(element => {
         $("#card-section").prepend(`
-        <div class="col">
+
         <img class="img-fluid card float-left" src="${element.src}">
-        </div>
+
         `)
     });
     $("#count").html(count)
