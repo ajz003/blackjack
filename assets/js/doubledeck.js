@@ -297,18 +297,18 @@ function evalRound() {
             }
 
             if (dealerTotal > 21) {
-                alert("Dealer busts.");
+                alert("庄家 爆牌了.");
                 return;
             }
 
             if (dealerTotal > yourTotal) {
-                alert(`Dealer wins with a ${dealerTotal} over your ${yourTotal}. (Split)`);
+                alert(`庄家 wins with a ${dealerTotal} over your ${yourTotal}. (Split)`);
             }
             if (dealerTotal < yourTotal) {
                 alert(`You win with a ${yourTotal} over the dealer's ${dealerTotal}. (Split)`);
             }
             if (dealerTotal === yourTotal) {
-                alert("Push. (Split)");
+                alert("平手. (Split)");
             }
         }
 
@@ -319,18 +319,18 @@ function evalRound() {
     }
 
     if (dealerTotal > 21) {
-        alert("Dealer busts.");
+        alert("庄家 爆牌了.");
         return;
     }
 
     if (dealerTotal > yourTotal) {
-        alert(`Dealer wins with a ${dealerTotal} over your ${yourTotal}.`);
+        alert(`庄家 wins with a ${dealerTotal} over your ${yourTotal}.`);
     }
     if (dealerTotal < yourTotal) {
         alert(`You win with a ${yourTotal} over the dealer's ${dealerTotal}.`);
     }
     if (dealerTotal === yourTotal) {
-        alert("Push.");
+        alert("平手");
     }
 
     count(yourCards);
@@ -609,7 +609,7 @@ $("#hit").on("click", function hit() {
     `)
 
         if (handValue(activeHand).total > 21) {
-            alert("You bust.");
+            alert("You 爆牌了.");
 
             $("#dealer-card-section").empty();
 
@@ -635,7 +635,7 @@ $("#hit").on("click", function hit() {
         `)
 
         if (handValue(activeHand).total > 21) {
-            alert("You bust.");
+            alert("You 爆牌了.");
 
             switchActive();
 
@@ -665,7 +665,7 @@ $("#double").on("click", function () {
         if (activeHand === yourCards) {
 
             if (handValue(activeHand).total > 21) {
-                alert("You bust.");
+                alert("You 爆牌了.");
             }
 
             appendYours();
@@ -679,7 +679,7 @@ $("#double").on("click", function () {
         `)
 
             if (handValue(activeHand).total > 21) {
-                alert("You bust.");
+                alert("You 爆牌了.");
 
 
             }
@@ -741,7 +741,7 @@ $("#no-insurance").on("click", function split() {
         dealerPlay();
         evalRound();
     } else {
-        alert("Dealer does not have blackjack.")
+        alert("庄家 does not have blackjack.")
         $(".btn").removeClass("disabled");
 
         if (!$("#split").hasClass("disabled")) {
