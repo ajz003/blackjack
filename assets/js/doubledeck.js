@@ -3,7 +3,6 @@ var suits = ["Spades", "Diamonds", "Clubs", "Hearts"];
 var suitsL = ["S", "D", "C", "H"];
 var values = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"];
 var yourCards = [];
-var yourSplitCards = [];
 var dealerCards = [];
 var disCards = [];
 var players = [];
@@ -95,11 +94,15 @@ function shuffleDeck(deck) {
 
 // }
 
+
+// ------------------------------------ CHANGE THIS AFTER TESTING
 function deal(playerHand) {
     playerHand.push(deck[0]);
+    // playerHand.push(new Card("8", "Clubs", `assets/images/8C.png`, "8"));
     deck.splice(0, 1);
     $("#cards-left").html(`${deck.length}/104`)
 }
+// ------------------------------------ CHANGE THIS AFTER TESTING
 
 function initCount() {
 
@@ -153,8 +156,6 @@ function count(playerHand) {
 
     }
 
-    $("#count").html(runningCount)
-    $("#your-count").html(runningCount)
 
 }
 
@@ -206,6 +207,18 @@ function appendYours() {
     `)
 }
 
+function switchActive() {
+
+    $(`#split-card-section-${splitNumber}`).removeClass("active");
+    splitNumber--;
+    $(`#split-card-section-${splitNumber}`).addClass("active");
+    if (splitNumber === 0) {
+        activeHand = yourCards;
+        $("#card-section").addClass("active");
+    }
+
+}
+
 function dealerPlay() {
 
     $("#dealer-card-section").empty();
@@ -254,9 +267,37 @@ function evalRound() {
     let dealerTotal = handValue(dealerCards).total;
     let yourTotal = handValue(yourCards).total;
 
-    
     $(".btn").addClass("disabled");
     $("#new-hand").removeClass("disabled");
+
+    splits = [splitArr1, splitArr2, splitArr3]
+
+    for (let i = splits.length - 1; i >= 0; i--) {
+
+        if (splits[i].length > 0) {
+            let yourTotal = handValue(splits[i]).total;
+
+            if (yourTotal > 21) {
+                return;
+            }
+
+            if (dealerTotal > 21) {
+                alert("Dealer busts.");
+                return;
+            }
+
+            if (dealerTotal > yourTotal) {
+                alert(`Dealer wins with a ${dealerTotal} over your ${yourTotal}.`);
+            }
+            if (dealerTotal < yourTotal) {
+                alert(`You win with a ${yourTotal} over the dealer's ${dealerTotal}.`);
+            }
+            if (dealerTotal === yourTotal) {
+                alert("Push.");
+            }
+        }
+
+    }
 
     if (yourTotal > 21) {
         return;
@@ -278,8 +319,15 @@ function evalRound() {
     }
 
     count(yourCards);
+
+    for (let i = 0; i < splits.length; i++) {
+        count(splits[i]);
+    }
+
     count(dealerCards);
 
+    $("#count").html(runningCount)
+    $("#your-count").html(runningCount)
 
 }
 
@@ -331,10 +379,23 @@ function newRound() {
 
     dealerCards = [];
 
+    splitArr1 = [];
+    splitArr2 = [];
+    splitArr3 = [];
+
+    splits = [splitArr1, splitArr2, splitArr3]
+
+    splitNumber = 0;
+
+    activeHand = yourCards;
+
     $(".btn").removeClass("disabled")
 
     $("#dealer-card-section").empty();
     $("#card-section").empty();
+    $("#card-section").removeClass("active");
+
+    $(".split").remove();
 
     if (!$("#split").hasClass("disabled")) {
         $("#split").addClass("disabled");
@@ -384,6 +445,16 @@ function newRound() {
     if (handValue(yourCards).total === 21 && dealerCards[1].value !== "Ace") {
         alert("You got 21.")
 
+        $("#dealer-card-section").empty();
+
+        dealerCards.forEach(element => {
+            $("#dealer-card-section").prepend(`
+            <div class="col">
+        <img class="img card float-left" src="${element.src}">
+        </div>
+        `)
+        });
+
         evalRound();
 
     }
@@ -415,49 +486,15 @@ $("#split-card-section").hide();
 //     }
 // })
 
-$("#hit").on("click", function hit() {
-    deal(yourCards);
-    initCount();
+var splitArr1 = [];
+var splitArr2 = [];
+var splitArr3 = [];
 
-    $("#card-section").append(`
-    <div class="col">
-    <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
-    </div>
-    `)
+var splits = [splitArr1, splitArr2, splitArr3]
 
-    if (handValue(yourCards).total > 21) {
-        alert("You bust.");
+var splitNumber = 0;
 
-        $("#dealer-card-section").empty();
-
-        dealerCards.forEach(element => {
-            $("#dealer-card-section").prepend(`
-            <div class="col">
-        <img class="img card float-left" src="${element.src}">
-        </div>
-        `)
-        });
-
-        evalRound();
-    }
-})
-
-$("#stand").on("click", function () {
-
-    dealerPlay();
-    evalRound();
-
-})
-
-$("#double").on("click", function () {
-
-    deal(yourCards);
-    appendYours();
-
-    dealerPlay();
-    evalRound();
-
-})
+var activeHand = yourCards;
 
 $("#split").on("click", function split() {
 
@@ -466,13 +503,38 @@ $("#split").on("click", function split() {
         return false;
     }
 
-    yourSplitCards.push(yourCards[1]);
-    yourCards.splice(1, 1);
-    console.log(yourCards, "yourcards splice")
-    console.log(yourSplitCards, "yoursplitcards splice")
+    if (splitNumber >= 3) {
+        alert("You can't split anymore.");
+        return false;
+    }
 
-    $("#split-card-section").show();
+    splitNumber++;
+    console.log(splitNumber, "splitnumber")
+
+    activeHand = splits[splitNumber - 1];
+
+    $("#your-play-row").append(`
+    <div class="col split active" id="split-card-section-${splitNumber}">
+
+    </div>
+    `)
+
+    if (splitNumber > 1) {
+
+        activeHand.push(splits[splitNumber - 2][1]);
+        activeHand.splice(1, 1);
+
+        $(`#split-card-section-${splitNumber - 1}`).removeClass("active");
+
+    } else {
+        activeHand.push(yourCards[1]);
+        yourCards.splice(1, 1);
+    }
+
+
     $("#card-section").empty();
+
+    deal(yourCards);
 
     yourCards.forEach(element => {
         $("#card-section").append(`
@@ -480,13 +542,104 @@ $("#split").on("click", function split() {
         `)
     });
 
-    yourSplitCards.forEach(element => {
-        $("#split-card-section").append(`
+    activeHand.forEach(element => {
+        $(`#split-card-section-${splitNumber}`).append(`
         <img class="img card float-left" src="${element.src}">
         `)
     });
 
+    deal(activeHand);
+
+    $(`#split-card-section-${splitNumber}`).append(`
+    <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
+    `)
+
 })
+
+$("#hit").on("click", function hit() {
+    deal(activeHand);
+    initCount();
+
+    if (activeHand === yourCards) {
+        $("#card-section").append(`
+        <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
+    `)
+
+        if (handValue(activeHand).total > 21) {
+            alert("You bust.");
+
+            $("#dealer-card-section").empty();
+
+            dealerCards.forEach(element => {
+                $("#dealer-card-section").prepend(`
+                <div class="col">
+                <img class="img card float-left" src="${element.src}">
+                </div>
+        `)
+            });
+
+            evalRound();
+        }
+    } if (handValue(activeHand).total > 21) {
+        dealerPlay();
+        evalRound();
+    }
+    else {
+        $(`#split-card-section-${splitNumber}`).append(`
+        <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
+        `)
+
+        if (handValue(activeHand).total > 21) {
+            alert("You bust.");
+
+            switchActive();
+
+        }
+    }
+
+
+})
+
+$("#stand").on("click", function () {
+
+    if (activeHand === yourCards) {
+        dealerPlay();
+        evalRound();
+    } else {
+        switchActive();
+    }
+
+
+})
+
+$("#double").on("click", function () {
+
+    deal(activeHand);
+
+    if (activeHand === yourCards) {
+
+        appendYours();
+
+        dealerPlay();
+        evalRound();
+
+    } else {
+
+        $(`#split-card-section-${splitNumber}`).append(`
+        <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
+        `)
+
+        if (handValue(activeHand).total > 21) {
+            alert("You bust.");
+
+            switchActive();
+
+        }
+    }
+
+})
+
+
 
 $("#insurance").on("click", function split() {
 
@@ -499,27 +652,27 @@ $("#insurance").on("click", function split() {
         dealerPlay();
         evalRound();
     } else {
-        deal(yourCards);
-        initCount();
-        $("#card-section").append(`
-        <div class="col">
-        <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
-        </div>
-        `)
-        if (handValue(yourCards).total > 21) {
-            alert("You bust.");
 
-            $("#dealer-card-section").empty();
+        $(".btn").removeClass("disabled");
 
-            dealerCards.forEach(element => {
-                $("#dealer-card-section").prepend(`
-                <div class="col">
-            <img class="img card float-left" src="${element.src}">
-            </div>
-            `)
-            });
+        if (!$("#split").hasClass("disabled")) {
+            $("#split").addClass("disabled");
+        }
+    
+        if (!$("#insurance").hasClass("disabled")) {
+            $("#insurance").addClass("disabled");
+        }
+    
+        if (!$("#no-insurance").hasClass("disabled")) {
+            $("#no-insurance").addClass("disabled");
+        }
+    
+        if (!$("#new-hand").hasClass("disabled")) {
+            $("#new-hand").addClass("disabled");
+        }
 
-            evalRound();
+        if (parseInt(yourCards[0].trueValue) === parseInt(yourCards[1].trueValue)) {
+            $("#split").removeClass("disabled");
         }
     }
 
@@ -536,27 +689,26 @@ $("#no-insurance").on("click", function split() {
         dealerPlay();
         evalRound();
     } else {
-        deal(yourCards);
-        initCount();
-        $("#card-section").append(`
-        <div class="col">
-        <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
-        </div>
-        `)
-        if (handValue(yourCards).total > 21) {
-            alert("You bust.");
+        $(".btn").removeClass("disabled");
 
-            $("#dealer-card-section").empty();
+        if (!$("#split").hasClass("disabled")) {
+            $("#split").addClass("disabled");
+        }
+    
+        if (!$("#insurance").hasClass("disabled")) {
+            $("#insurance").addClass("disabled");
+        }
+    
+        if (!$("#no-insurance").hasClass("disabled")) {
+            $("#no-insurance").addClass("disabled");
+        }
+    
+        if (!$("#new-hand").hasClass("disabled")) {
+            $("#new-hand").addClass("disabled");
+        }
 
-            dealerCards.forEach(element => {
-                $("#dealer-card-section").prepend(`
-                <div class="col">
-            <img class="img card float-left" src="${element.src}">
-            </div>
-            `)
-            });
-
-            evalRound();
+        if (parseInt(yourCards[0].trueValue) === parseInt(yourCards[1].trueValue)) {
+            $("#split").removeClass("disabled");
         }
     }
 
@@ -572,3 +724,4 @@ $("#new-hand").on("click", function () {
     newRound();
 
 })
+

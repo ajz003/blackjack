@@ -4,7 +4,8 @@
 
 .img {
     max-width: 33%;
-    margin: 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .btn.disabled, .btn:disabled {
@@ -21,4 +22,8 @@ body {
 
 p, h1 {
     color: lemonchiffon;
+}
+
+.active {
+    border: 5px solid yellow;
 }
