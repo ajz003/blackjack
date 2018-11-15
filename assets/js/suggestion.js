@@ -6,7 +6,7 @@ function suggestion() {
     let canSplit = false
     let pair;
 
-    if (activeHand[0].trueValue === activeHand[1].trueValue) {
+    if (activeHand[0].trueValue === activeHand[1].trueValue && !$("#split").hasClass("disabled")) {
         canSplit = true;
         pair = parseInt(activeHand[0].trueValue)
     }

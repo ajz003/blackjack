@@ -793,6 +793,7 @@ $("#new-hand").on("click", function () {
 $(".btn").on("click", function () {
     if (activeHand.length > 2) {
         $("#double").addClass("disabled");
+        $("#split").addClass("disabled");
     }
 })
 
