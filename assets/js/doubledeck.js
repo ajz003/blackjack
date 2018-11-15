@@ -62,6 +62,7 @@ function shuffleDeck(deck) {
         let j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]]
     }
+    alert ("Deck has been shuffled.");
     return deck;
 }
 
@@ -96,6 +97,8 @@ function shuffleDeck(deck) {
 
 
 // ------------------------------------ CHANGE THIS AFTER TESTING
+
+let cutNote = false; 
 function deal(playerHand) {
     playerHand.push(deck[0]);
     // let rand = Math.random()
@@ -106,6 +109,12 @@ function deal(playerHand) {
     // }
     deck.splice(0, 1);
     $("#cards-left").html(`${deck.length}/104`)
+
+    if (deck.length <= cutPosition * (52*2) && cutNote === false) {
+        alert("Cut card has been reached.")
+        cutNote = true;
+    }
+
 }
 // ------------------------------------ CHANGE THIS AFTER TESTING
 
@@ -136,7 +145,7 @@ function initCount() {
 
     }
 
-    $("#count").html(runningCount)
+    // $("#count").html(runningCount)
     $("#your-count").html(playerRoundCount)
 
 }
@@ -332,48 +341,27 @@ function evalRound() {
 
     count(dealerCards);
 
-    $("#count").html(runningCount)
+    // $("#count").html(runningCount)
     $("#your-count").html(runningCount)
 
 }
+
+let cutPosition;
 
 function initDeck() {
 
     trueRoundCount = 0;
     playerRoundCount = 0;
 
+    deck = [];
+    cutNote = false;
+
     makeDeck(2);
     shuffleDeck(deck);
 
-    // while (dealerCards.length < 2 || yourCards < 2) {
-    //     deal(yourCards);
-    //     deal(dealerCards);
-    // }
-
-    // $("#dealer-card-section").append(`
-    //     <img class="img card float-left" src="assets/images/gray_back.png">
-    //     `)
-
-    // $("#dealer-card-section").prepend(`
-    // <img class="img card float-left" src=${dealerCards[1].src}>
-    // `)
-
-    // yourCards.forEach(element => {
-    //     $("#card-section").prepend(`
-    //     <img class="img card float-left" src="${element.src}">
-    //     `)
-    // });
-
-    // $("#count").html(trueRoundCount)
-    // $("#your-count").html(playerRoundCount)
-    // $("#cards-left").html(`${deck.length}/104`)
-
-    // console.log(yourCards[0].trueValue)
-    // console.log(yourCards[1].trueValue)
-
-    // if (parseInt(yourCards[0].trueValue) === parseInt(yourCards[1].trueValue)) {
-    //     $("#split").removeClass("disabled");
-    // }
+    cutPosition = 1-((60 + Math.floor(Math.random() * 21))/100)
+    let cutReport = 1-cutPosition;
+    alert("Cut card was placed " + Math.round((cutReport*100)) + "% of the way into the deck.")
 
     newRound();
 
@@ -382,7 +370,6 @@ function initDeck() {
 function newRound() {
 
     yourCards = [];
-
     dealerCards = [];
 
     splitArr1 = [];
@@ -392,6 +379,10 @@ function newRound() {
     splits = [splitArr1, splitArr2, splitArr3]
 
     splitNumber = 0;
+
+    if (deck.length <= cutPosition * (52*2)) {
+        return initDeck();
+    }
 
     activeHand = yourCards;
 
@@ -709,10 +700,11 @@ $("#insurance").on("click", function split() {
     }
 
     if (handValue(dealerCards).total === 21) {
+        alert("Your insurance paid off!")
         dealerPlay();
         evalRound();
     } else {
-
+        alert("You lost your insurance.")
         $(".btn").removeClass("disabled");
 
         if (!$("#split").hasClass("disabled")) {
@@ -749,6 +741,7 @@ $("#no-insurance").on("click", function split() {
         dealerPlay();
         evalRound();
     } else {
+        alert("Dealer does not have blackjack.")
         $(".btn").removeClass("disabled");
 
         if (!$("#split").hasClass("disabled")) {
