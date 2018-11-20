@@ -542,8 +542,10 @@ $("#split").on("click", function split() {
     activeHand = splits[splitNumber - 1];
 
     $("#your-play-row").append(`
-    <div class="col split active" id="split-card-section-${splitNumber}">
+    <div class="row split">
+    <div class="col active" id="split-card-section-${splitNumber}">
 
+    </div>
     </div>
     `)
 

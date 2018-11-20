@@ -31,6 +31,7 @@
 
 body {
     background-color: #477148;
+    overflow: auto;
 }
 
 p, h1 {
