@@ -62,7 +62,7 @@ function shuffleDeck(deck) {
         let j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]]
     }
-    alert ("Deck has been shuffled.");
+    // alert ("Deck has been shuffled.");
     return deck;
 }
 
@@ -215,7 +215,7 @@ function handValue(playerHand) {
 
 function appendYours() {
     $("#card-section").append(`
-    <img class="img card float-left" src="${yourCards[yourCards.length - 1].src}">
+    <img class="img cards float-left" src="${yourCards[yourCards.length - 1].src}">
     `)
 }
 
@@ -241,7 +241,7 @@ function dealerPlay() {
     dealerCards.forEach(element => {
         $("#dealer-card-section").prepend(`
         <div class="col">
-    <img class="img card float-left" src="${element.src}">
+    <img class="img cards float-left" src="${element.src}">
     </div>
     `)
     });
@@ -254,7 +254,7 @@ function dealerPlay() {
         deal(dealerCards);
         $("#dealer-card-section").append(`
         <div class="col">
-        <img class="img card float-left" src="${dealerCards[dealerCards.length - 1].src}">
+        <img class="img cards float-left" src="${dealerCards[dealerCards.length - 1].src}">
         </div>
         `)
 
@@ -266,7 +266,7 @@ function dealerPlay() {
         deal(dealerCards);
         $("#dealer-card-section").append(`
         <div class="col">
-        <img class="img card float-left" src="${dealerCards[dealerCards.length - 1].src}">
+        <img class="img cards float-left" src="${dealerCards[dealerCards.length - 1].src}">
         </div>
         `)
 
@@ -361,7 +361,7 @@ function initDeck() {
 
     cutPosition = 1-((60 + Math.floor(Math.random() * 21))/100)
     let cutReport = 1-cutPosition;
-    alert("Cut card was placed " + Math.round((cutReport*100)) + "% of the way into the deck.")
+    // alert("Cut card was placed " + Math.round((cutReport*100)) + "% of the way into the deck.")
 
     newRound();
 
@@ -417,20 +417,20 @@ function newRound() {
 
     $("#dealer-card-section").append(`
 
-        <img class="img card float-left" src="assets/images/gray_back.png">
+        <img class="img cards float-left" src="assets/images/gray_back.png">
 
         `)
 
     $("#dealer-card-section").prepend(`
 
-    <img class="img card float-left" src=${dealerCards[1].src}>
+    <img class="img cards float-left" src=${dealerCards[1].src}>
 
     `)
 
     yourCards.forEach(element => {
         $("#card-section").prepend(`
 
-        <img class="img card float-left" src="${element.src}">
+        <img class="img cards float-left" src="${element.src}">
 
         `)
     });
@@ -455,7 +455,7 @@ function newRound() {
         dealerCards.forEach(element => {
             $("#dealer-card-section").prepend(`
             <div class="col">
-        <img class="img card float-left" src="${element.src}">
+        <img class="img cards float-left" src="${element.src}">
         </div>
         `)
         });
@@ -561,7 +561,7 @@ $("#split").on("click", function split() {
 
         splits[splitNumber - 1].forEach(element => {
             $(`#split-card-section-${splitNumber - 1}`).append(`
-            <img class="img card float-left" src="${element.src}">
+            <img class="img cards float-left" src="${element.src}">
             `)
         });
 
@@ -576,7 +576,7 @@ $("#split").on("click", function split() {
 
         yourCards.forEach(element => {
             $("#card-section").append(`
-        <img class="img card float-left" src="${element.src}">
+        <img class="img cards float-left" src="${element.src}">
         `)
         });
 
@@ -584,7 +584,7 @@ $("#split").on("click", function split() {
 
     activeHand.forEach(element => {
         $(`#split-card-section-${splitNumber}`).append(`
-        <img class="img card float-left" src="${element.src}">
+        <img class="img cards float-left" src="${element.src}">
         `)
     });
 
@@ -605,7 +605,7 @@ $("#hit").on("click", function hit() {
 
     if (activeHand === yourCards) {
         $("#card-section").append(`
-        <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
+        <img class="img cards float-left" src="${activeHand[activeHand.length - 1].src}">
     `)
 
         if (handValue(activeHand).total > 21) {
@@ -616,7 +616,7 @@ $("#hit").on("click", function hit() {
             dealerCards.forEach(element => {
                 $("#dealer-card-section").prepend(`
                 <div class="col">
-                <img class="img card float-left" src="${element.src}">
+                <img class="img cards float-left" src="${element.src}">
                 </div>
         `)
             });
@@ -631,7 +631,7 @@ $("#hit").on("click", function hit() {
 
     } else {
         $(`#split-card-section-${splitNumber}`).append(`
-        <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
+        <img class="img cards float-left" src="${activeHand[activeHand.length - 1].src}">
         `)
 
         if (handValue(activeHand).total > 21) {
@@ -675,7 +675,7 @@ $("#double").on("click", function () {
         } else {
 
             $(`#split-card-section-${splitNumber}`).append(`
-        <img class="img card float-left" src="${activeHand[activeHand.length - 1].src}">
+        <img class="img cards float-left" src="${activeHand[activeHand.length - 1].src}">
         `)
 
             if (handValue(activeHand).total > 21) {
