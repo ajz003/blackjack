@@ -1,11 +1,18 @@
 .row {
-    margin: 20px;
+    margin: 0px;
 }
 
 .img {
     max-width: 33%;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    
+}
+
+.container {
+    margin-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .btn {
@@ -24,6 +31,7 @@
 
 body {
     background-color: #477148;
+    overflow: auto;
 }
 
 p, h1 {
@@ -32,8 +40,70 @@ p, h1 {
 
 h1 {
     margin: 0px;
+    font-size: 24px;
 }
 
 .active {
     border: 5px solid yellow;
 }
+
+.landscape {
+   text-align: center;
+}
+
+#card-section {
+    float: left;
+}
+
+div.contentholder {
+
+    -webkit-overflow-scrolling: touch;
+ 
+ }
+
+ @media (min-width: 768px) { 
+
+
+    h1 {
+        float: left;
+        font-size: 16px;
+    }
+
+    .row {
+        margin: 5px;
+    }
+    
+    .all-cards {
+        display: flex;
+    }
+
+    .img {
+        max-width: 50%;
+        
+    }
+
+ }
+
+@media screen and (orientation: landscape) { 
+
+
+    h1 {
+        float: left;
+        font-size: 16px;
+    }
+
+    .row {
+        margin: 5px;
+    }
+    
+    .all-cards {
+        display: flex;
+    }
+
+    .img {
+        max-width: 40%;
+        
+    }
+
+ }
+
