@@ -439,7 +439,11 @@ function newRound() {
 
     $("#cards-left").html(`${deck.length}/104`)
 
-
+    if (handValue(dealerCards).total === 21 && dealerCards[1].trueValue === "10") {
+        dealerPlay();
+        evalRound();
+        return;
+    }
 
     if (handValue(yourCards).total === 21 && dealerCards[1].value !== "Ace") {
         alert("You got 21.")
